@@ -25,7 +25,7 @@ class LoanApplication(BaseModel):
 
 
 class PredictionRequest(BaseModel):
-    """Batch prediction request. ``source`` records where it came from."""
+    """Batch prediction request (1..N applications). ``source`` records origin."""
 
     applications: list[LoanApplication] = Field(..., min_length=1)
     source: Literal["webapp", "scheduled"] = "webapp"
@@ -50,5 +50,6 @@ class PastPrediction(BaseModel):
     cibil_score: Optional[int] = None
     loan_amount: Optional[float] = None
     income_annum: Optional[float] = None
+    features: Optional[dict] = None  # full input row, for the UI to display
 
     model_config = {"from_attributes": True}

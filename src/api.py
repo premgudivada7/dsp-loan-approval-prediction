@@ -2,9 +2,9 @@
 FastAPI model-serving app.
 
 Endpoints:
-  GET  /health           – liveness + which model is loaded
-  POST /predict          – batch prediction (1..N applications), persists rows
-  GET  /predictions      – past predictions (paginated), newest first
+  GET  /health            – liveness + which model is loaded
+  POST /predict           – batch prediction (1..N applications), persists rows
+  GET  /past-predictions  – past predictions (paginated, filterable), newest first
 
 FastAPI features used: Pydantic request/response models, response_model,
 status codes, model loading once at startup via lifespan, HTTPException error
@@ -14,6 +14,7 @@ handling, and DB session dependency injection with Depends().
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
+from datetime import date, datetime, time
 
 import pandas as pd
 from fastapi import Depends, FastAPI, HTTPException, Query, status
@@ -34,7 +35,6 @@ async def lifespan(app: FastAPI):
     try:
         ml_models["service"] = ModelService.load()
     except FileNotFoundError as exc:
-        # Fail fast with a clear message rather than crashing on first request.
         raise RuntimeError(str(exc)) from exc
     yield
     ml_models.clear()
@@ -55,7 +55,11 @@ def get_model() -> ModelService:
 
 @app.get("/health")
 def health(model: ModelService = Depends(get_model)):
-    return {"status": "ok", "model_name": model.model_name, "backend": model.backend}
+    return {
+        "status": "healthy",
+        "model_name": model.model_name,
+        "backend": model.backend,
+    }
 
 
 @app.post("/predict", response_model=PredictionResponse, status_code=status.HTTP_200_OK)
@@ -91,15 +95,23 @@ def predict(
     return PredictionResponse(model_name=model.model_name, results=results)
 
 
-@app.get("/predictions", response_model=list[PastPrediction])
+@app.get("/past-predictions", response_model=list[PastPrediction])
 def past_predictions(
-    limit: int = Query(50, ge=1, le=500),
+    limit: int = Query(100, ge=1, le=1000),
     offset: int = Query(0, ge=0),
-    source: str | None = Query(None),
+    source: str | None = Query(None, description="webapp | scheduled | all"),
+    start_date: date | None = Query(None, description="filter created_at >= this date"),
+    end_date: date | None = Query(None, description="filter created_at <= this date"),
     db: Session = Depends(get_db),
 ):
     stmt = select(Prediction).order_by(Prediction.created_at.desc())
-    if source:
+    if source and source != "all":
         stmt = stmt.where(Prediction.source == source)
+    if start_date:
+        stmt = stmt.where(
+            Prediction.created_at >= datetime.combine(start_date, time.min)
+        )
+    if end_date:
+        stmt = stmt.where(Prediction.created_at <= datetime.combine(end_date, time.max))
     stmt = stmt.limit(limit).offset(offset)
     return db.execute(stmt).scalars().all()
