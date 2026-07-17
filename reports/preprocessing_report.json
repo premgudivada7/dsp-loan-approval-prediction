@@ -17,7 +17,7 @@
     "luxury_assets_value": -0.015,
     "bank_asset_value": -0.007
   },
-  "clean_csv": "data/clean_loan_data.csv",
-  "rejected_csv": "reports/rejected_rows.csv",
-  "heatmap": "reports/correlation_heatmap.png"
+  "clean_csv": "data\\clean_loan_data.csv",
+  "rejected_csv": "reports\\rejected_rows.csv",
+  "heatmap": "reports\\correlation_heatmap.png"
 }
