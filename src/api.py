@@ -10,6 +10,7 @@ FastAPI features used: Pydantic request/response models, response_model,
 status codes, model loading once at startup via lifespan, HTTPException error
 handling, and DB session dependency injection with Depends().
 """
+
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
@@ -21,7 +22,7 @@ from sqlalchemy.orm import Session
 
 from src.db import IngestionStat, Prediction, get_db, init_db  # noqa: F401
 from src.model_service import ModelService
-from src.schemas import (PastPrediction, PredictionRequest, PredictionResponse)
+from src.schemas import PastPrediction, PredictionRequest, PredictionResponse
 
 # Populated once at startup.
 ml_models: dict = {}
@@ -57,8 +58,7 @@ def health(model: ModelService = Depends(get_model)):
     return {"status": "ok", "model_name": model.model_name, "backend": model.backend}
 
 
-@app.post("/predict", response_model=PredictionResponse,
-          status_code=status.HTTP_200_OK)
+@app.post("/predict", response_model=PredictionResponse, status_code=status.HTTP_200_OK)
 def predict(
     request: PredictionRequest,
     model: ModelService = Depends(get_model),
@@ -75,15 +75,17 @@ def predict(
         ) from exc
 
     for row, res in zip(rows, results):
-        db.add(Prediction(
-            source=request.source,
-            prediction=res["prediction"],
-            probability=res["probability"],
-            cibil_score=int(row["cibil_score"]),
-            loan_amount=float(row["loan_amount"]),
-            income_annum=float(row["income_annum"]),
-            features=row,
-        ))
+        db.add(
+            Prediction(
+                source=request.source,
+                prediction=res["prediction"],
+                probability=res["probability"],
+                cibil_score=int(row["cibil_score"]),
+                loan_amount=float(row["loan_amount"]),
+                income_annum=float(row["income_annum"]),
+                features=row,
+            )
+        )
     db.commit()
 
     return PredictionResponse(model_name=model.model_name, results=results)

@@ -21,6 +21,7 @@ Usage:
   python -m src.generate_errors --input data/clean_loan_data.csv \
       --output data/corrupted.csv --null-prob 0.05 --validity-prob 0.05 ...
 """
+
 from __future__ import annotations
 
 import argparse
@@ -37,7 +38,9 @@ def _rows_to_hit(n: int, prob: float, rng) -> np.ndarray:
     return np.where(rng.random(n) < prob)[0]
 
 
-def inject_errors(df: pd.DataFrame, probs: dict, seed: int = None) -> tuple[pd.DataFrame, dict]:
+def inject_errors(
+    df: pd.DataFrame, probs: dict, seed: int = None
+) -> tuple[pd.DataFrame, dict]:
     rng = np.random.default_rng(seed)
     df = df.copy().astype(object)
     n = len(df)
@@ -50,7 +53,9 @@ def inject_errors(df: pd.DataFrame, probs: dict, seed: int = None) -> tuple[pd.D
 
     # 2. validity: value outside valid range (cibil far out of [300, 900])
     idx = _rows_to_hit(n, probs["validity"], rng)
-    df.iloc[idx, df.columns.get_loc("cibil_score")] = rng.choice([-10, 2000], size=len(idx))
+    df.iloc[idx, df.columns.get_loc("cibil_score")] = rng.choice(
+        [-10, 2000], size=len(idx)
+    )
     log["validity_range"] = len(idx)
 
     # 3. consistency: invalid categorical value
@@ -73,7 +78,9 @@ def inject_errors(df: pd.DataFrame, probs: dict, seed: int = None) -> tuple[pd.D
     # 6. duplicate primary keys
     idx = _rows_to_hit(n, probs["duplicate"], rng)
     if len(idx):
-        df.iloc[idx, df.columns.get_loc("loan_id")] = df.iloc[0, df.columns.get_loc("loan_id")]
+        df.iloc[idx, df.columns.get_loc("loan_id")] = df.iloc[
+            0, df.columns.get_loc("loan_id")
+        ]
     log["duplicate_pk"] = len(idx)
 
     # 7. statistical outlier
@@ -90,8 +97,14 @@ def inject_errors(df: pd.DataFrame, probs: dict, seed: int = None) -> tuple[pd.D
 
 
 DEFAULTS = {
-    "null": 0.05, "validity": 0.05, "consistency": 0.05, "schema": 0.10,
-    "type": 0.05, "duplicate": 0.03, "outlier": 0.03, "impossible": 0.03,
+    "null": 0.05,
+    "validity": 0.05,
+    "consistency": 0.05,
+    "schema": 0.10,
+    "type": 0.05,
+    "duplicate": 0.03,
+    "outlier": 0.03,
+    "impossible": 0.03,
 }
 
 
