@@ -1,4 +1,5 @@
 """Unit tests for feature engineering, error injection, splitting and validation."""
+
 from __future__ import annotations
 
 import numpy as np
@@ -10,14 +11,25 @@ from src.generate_errors import DEFAULTS, inject_errors
 from src.gx_validation import compute_criticality
 from src.split_data import ROWS_PER_FILE, split
 
-
-SAMPLE = pd.DataFrame([{
-    "loan_id": 1, "no_of_dependents": 2, "education": "Graduate",
-    "self_employed": "No", "income_annum": 9600000, "loan_amount": 29900000,
-    "loan_term": 12, "cibil_score": 778, "residential_assets_value": 2400000,
-    "commercial_assets_value": 17600000, "luxury_assets_value": 22700000,
-    "bank_asset_value": 8000000, "loan_status": "Approved",
-}])
+SAMPLE = pd.DataFrame(
+    [
+        {
+            "loan_id": 1,
+            "no_of_dependents": 2,
+            "education": "Graduate",
+            "self_employed": "No",
+            "income_annum": 9600000,
+            "loan_amount": 29900000,
+            "loan_term": 12,
+            "cibil_score": 778,
+            "residential_assets_value": 2400000,
+            "commercial_assets_value": 17600000,
+            "luxury_assets_value": 22700000,
+            "bank_asset_value": 8000000,
+            "loan_status": "Approved",
+        }
+    ]
+)
 
 
 def test_engineer_shapes_and_order():
@@ -50,13 +62,16 @@ def test_inject_errors_produces_problems():
     assert len(corrupted) == len(df)
 
 
-@pytest.mark.parametrize("missing,pct,expected", [
-    (True, 0, "High"),
-    (False, 80, "High"),
-    (False, 30, "Medium"),
-    (False, 5, "Low"),
-    (False, 0, "None"),
-])
+@pytest.mark.parametrize(
+    "missing,pct,expected",
+    [
+        (True, 0, "High"),
+        (False, 80, "High"),
+        (False, 30, "Medium"),
+        (False, 5, "Low"),
+        (False, 0, "None"),
+    ],
+)
 def test_compute_criticality(missing, pct, expected):
     assert compute_criticality(missing, pct) == expected
 

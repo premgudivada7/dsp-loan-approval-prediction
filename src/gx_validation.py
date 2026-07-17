@@ -4,6 +4,7 @@ Validates the ingested loan data using Great Expectations.
 It generates a validation summary that is used to save statistics,
 send alerts, and separate valid and invalid records.
 """
+
 from __future__ import annotations
 
 import os
@@ -15,16 +16,28 @@ ROOT = Path(__file__).resolve().parents[1]
 GX_ROOT = os.getenv("GX_ROOT_DIR", str(ROOT / "great_expectations"))
 
 REQUIRED_COLUMNS = [
-    "loan_id", "no_of_dependents", "education", "self_employed", "income_annum",
-    "loan_amount", "loan_term", "cibil_score", "residential_assets_value",
-    "commercial_assets_value", "luxury_assets_value", "bank_asset_value",
+    "loan_id",
+    "no_of_dependents",
+    "education",
+    "self_employed",
+    "income_annum",
+    "loan_amount",
+    "loan_term",
+    "cibil_score",
+    "residential_assets_value",
+    "commercial_assets_value",
+    "luxury_assets_value",
+    "bank_asset_value",
 ]
 NON_NEGATIVE = [
-    "income_annum", "loan_amount", "residential_assets_value",
-    "commercial_assets_value", "luxury_assets_value", "bank_asset_value",
+    "income_annum",
+    "loan_amount",
+    "residential_assets_value",
+    "commercial_assets_value",
+    "luxury_assets_value",
+    "bank_asset_value",
 ]
 SUITE_NAME = "loan_ingestion_suite"
-
 
 
 def compute_criticality(missing_column: bool, invalid_pct: float) -> str:
@@ -47,22 +60,39 @@ def _build_suite(gx, gxe):
     for col in ["loan_id", "cibil_score", "education", "self_employed", "income_annum"]:
         suite.add_expectation(gxe.ExpectColumnValuesToNotBeNull(column=col))
     # Validity (ranges)
-    suite.add_expectation(gxe.ExpectColumnValuesToBeBetween(
-        column="cibil_score", min_value=300, max_value=900))
-    suite.add_expectation(gxe.ExpectColumnValuesToBeBetween(
-        column="no_of_dependents", min_value=0, max_value=15))
-    suite.add_expectation(gxe.ExpectColumnValuesToBeBetween(
-        column="loan_term", min_value=1, max_value=40))
+    suite.add_expectation(
+        gxe.ExpectColumnValuesToBeBetween(
+            column="cibil_score", min_value=300, max_value=900
+        )
+    )
+    suite.add_expectation(
+        gxe.ExpectColumnValuesToBeBetween(
+            column="no_of_dependents", min_value=0, max_value=15
+        )
+    )
+    suite.add_expectation(
+        gxe.ExpectColumnValuesToBeBetween(column="loan_term", min_value=1, max_value=40)
+    )
     for col in NON_NEGATIVE:
-        suite.add_expectation(gxe.ExpectColumnValuesToBeBetween(
-            column=col, min_value=0, max_value=1_000_000_000))
-    suite.add_expectation(gxe.ExpectColumnValuesToBeInSet(
-        column="education", value_set=["Graduate", "Not Graduate"]))
-    suite.add_expectation(gxe.ExpectColumnValuesToBeInSet(
-        column="self_employed", value_set=["Yes", "No"]))
+        suite.add_expectation(
+            gxe.ExpectColumnValuesToBeBetween(
+                column=col, min_value=0, max_value=1_000_000_000
+            )
+        )
+    suite.add_expectation(
+        gxe.ExpectColumnValuesToBeInSet(
+            column="education", value_set=["Graduate", "Not Graduate"]
+        )
+    )
+    suite.add_expectation(
+        gxe.ExpectColumnValuesToBeInSet(column="self_employed", value_set=["Yes", "No"])
+    )
     suite.add_expectation(gxe.ExpectColumnValuesToBeUnique(column="loan_id"))
-    suite.add_expectation(gxe.ExpectColumnValuesToBeInTypeList(
-        column="cibil_score", type_list=["INTEGER", "int64", "int", "float64"]))
+    suite.add_expectation(
+        gxe.ExpectColumnValuesToBeInTypeList(
+            column="cibil_score", type_list=["INTEGER", "int64", "int", "float64"]
+        )
+    )
     return suite
 
 
@@ -95,17 +125,20 @@ def _gx_validate(df: pd.DataFrame, file_name: str) -> dict:
 
     try:
         vdef = context.validation_definitions.add(
-            gx.ValidationDefinition(name="loan_vdef", data=batch_def, suite=suite))
+            gx.ValidationDefinition(name="loan_vdef", data=batch_def, suite=suite)
+        )
     except Exception:
         vdef = context.validation_definitions.get("loan_vdef")
 
     try:
-        checkpoint = context.checkpoints.add(gx.Checkpoint(
-            name="loan_checkpoint",
-            validation_definitions=[vdef],
-            actions=[UpdateDataDocsAction(name="update_data_docs")],
-            result_format=ResultFormat.COMPLETE,
-        ))
+        checkpoint = context.checkpoints.add(
+            gx.Checkpoint(
+                name="loan_checkpoint",
+                validation_definitions=[vdef],
+                actions=[UpdateDataDocsAction(name="update_data_docs")],
+                result_format=ResultFormat.COMPLETE,
+            )
+        )
     except Exception:
         checkpoint = context.checkpoints.get("loan_checkpoint")
 
@@ -135,8 +168,15 @@ def _summarise_gx(result, df: pd.DataFrame, file_name: str) -> dict:
             error_summary[etype] = error_summary.get(etype, 0) + int(count)
             invalid_idx.update(int(i) for i in idx_list)
 
-    return _finalise(df, file_name, invalid_idx, error_summary, missing_column,
-                     report_name="index.html")
+    return _finalise(
+        df,
+        file_name,
+        invalid_idx,
+        error_summary,
+        missing_column,
+        report_name="index.html",
+    )
+
 
 def _pandas_validate(df: pd.DataFrame, file_name: str) -> dict:
     invalid_idx: set[int] = set()
@@ -166,8 +206,15 @@ def _pandas_validate(df: pd.DataFrame, file_name: str) -> dict:
     if "loan_id" in df:
         flag(df["loan_id"].duplicated(keep=False), "duplicate_loan_id")
 
-    return _finalise(df, file_name, invalid_idx, error_summary, missing_column,
-                     report_name="pandas_fallback.html")
+    return _finalise(
+        df,
+        file_name,
+        invalid_idx,
+        error_summary,
+        missing_column,
+        report_name="pandas_fallback.html",
+    )
+
 
 def _finalise(df, file_name, invalid_idx, error_summary, missing_column, report_name):
     total = len(df)

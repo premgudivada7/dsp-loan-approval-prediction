@@ -19,9 +19,15 @@ API_URL = os.getenv("API_URL", "http://api:8000")
 PROCESSED_VAR = "processed_prediction_files"
 
 NUMERIC_COLS = [
-    "no_of_dependents", "income_annum", "loan_amount", "loan_term",
-    "cibil_score", "residential_assets_value", "commercial_assets_value",
-    "luxury_assets_value", "bank_asset_value",
+    "no_of_dependents",
+    "income_annum",
+    "loan_amount",
+    "loan_term",
+    "cibil_score",
+    "residential_assets_value",
+    "commercial_assets_value",
+    "luxury_assets_value",
+    "bank_asset_value",
 ]
 INT_COLS = ["no_of_dependents", "loan_term", "cibil_score"]
 FEATURE_COLS = ["education", "self_employed"] + NUMERIC_COLS
@@ -42,8 +48,14 @@ def clean_batch(df: pd.DataFrame) -> pd.DataFrame:
     df = df[df["cibil_score"].between(300, 900)]
     df = df[df["no_of_dependents"].between(0, 15)]
     df = df[df["loan_term"].between(1, 40)]
-    for c in ["income_annum", "loan_amount", "residential_assets_value",
-              "commercial_assets_value", "luxury_assets_value", "bank_asset_value"]:
+    for c in [
+        "income_annum",
+        "loan_amount",
+        "residential_assets_value",
+        "commercial_assets_value",
+        "luxury_assets_value",
+        "bank_asset_value",
+    ]:
         df = df[df[c] >= 0]
 
     for c in INT_COLS:
@@ -53,7 +65,7 @@ def clean_batch(df: pd.DataFrame) -> pd.DataFrame:
 
 @dag(
     dag_id="loan_scheduled_prediction",
-    schedule="*/5 * * * *",           # every 5 minutes
+    schedule="*/5 * * * *",  # every 5 minutes
     start_date=pendulum.datetime(2024, 1, 1, tz="UTC"),
     catchup=False,
     max_active_runs=1,
@@ -68,7 +80,7 @@ def prediction_dag():
         new_files = sorted(all_files - processed)
         if not new_files:
             print("No new data in good_data — skipping run.")
-            return []          # falsy -> downstream skipped
+            return []  # falsy -> downstream skipped
         print(f"Found {len(new_files)} new file(s).")
         return new_files
 
@@ -80,8 +92,10 @@ def prediction_dag():
 
         result = {"files": len(new_files), "rows_scored": 0}
         if not batch.empty:
-            payload = {"source": "scheduled",
-                       "applications": batch.to_dict(orient="records")}
+            payload = {
+                "source": "scheduled",
+                "applications": batch.to_dict(orient="records"),
+            }
             resp = requests.post(f"{API_URL}/predict", json=payload, timeout=60)
             resp.raise_for_status()
             result["rows_scored"] = len(resp.json()["results"])

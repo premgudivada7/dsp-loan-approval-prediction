@@ -7,6 +7,7 @@ Two pages (sidebar):
 
 The API base URL comes from the API_URL environment variable.
 """
+
 from __future__ import annotations
 
 import os
@@ -31,30 +32,47 @@ def prediction_page() -> None:
             no_of_dependents = st.number_input("Dependents", 0, 15, 2)
             education = st.selectbox("Education", ["Graduate", "Not Graduate"])
             self_employed = st.selectbox("Self employed", ["No", "Yes"])
-            income_annum = st.number_input("Annual income", 0, value=9_600_000, step=100_000)
-            loan_amount = st.number_input("Loan amount", 0, value=29_900_000, step=100_000)
+            income_annum = st.number_input(
+                "Annual income", 0, value=9_600_000, step=100_000
+            )
+            loan_amount = st.number_input(
+                "Loan amount", 0, value=29_900_000, step=100_000
+            )
             loan_term = st.number_input("Loan term (years)", 1, 40, 12)
         with col2:
             cibil_score = st.number_input("CIBIL score", 300, 900, 778)
-            residential_assets_value = st.number_input("Residential assets", 0, value=2_400_000, step=100_000)
-            commercial_assets_value = st.number_input("Commercial assets", 0, value=17_600_000, step=100_000)
-            luxury_assets_value = st.number_input("Luxury assets", 0, value=22_700_000, step=100_000)
-            bank_asset_value = st.number_input("Bank assets", 0, value=8_000_000, step=100_000)
+            residential_assets_value = st.number_input(
+                "Residential assets", 0, value=2_400_000, step=100_000
+            )
+            commercial_assets_value = st.number_input(
+                "Commercial assets", 0, value=17_600_000, step=100_000
+            )
+            luxury_assets_value = st.number_input(
+                "Luxury assets", 0, value=22_700_000, step=100_000
+            )
+            bank_asset_value = st.number_input(
+                "Bank assets", 0, value=8_000_000, step=100_000
+            )
         submitted = st.form_submit_button("Predict")
 
     if submitted:
         payload = {
             "source": "webapp",
-            "applications": [{
-                "no_of_dependents": no_of_dependents, "education": education,
-                "self_employed": self_employed, "income_annum": income_annum,
-                "loan_amount": loan_amount, "loan_term": loan_term,
-                "cibil_score": cibil_score,
-                "residential_assets_value": residential_assets_value,
-                "commercial_assets_value": commercial_assets_value,
-                "luxury_assets_value": luxury_assets_value,
-                "bank_asset_value": bank_asset_value,
-            }],
+            "applications": [
+                {
+                    "no_of_dependents": no_of_dependents,
+                    "education": education,
+                    "self_employed": self_employed,
+                    "income_annum": income_annum,
+                    "loan_amount": loan_amount,
+                    "loan_term": loan_term,
+                    "cibil_score": cibil_score,
+                    "residential_assets_value": residential_assets_value,
+                    "commercial_assets_value": commercial_assets_value,
+                    "luxury_assets_value": luxury_assets_value,
+                    "bank_asset_value": bank_asset_value,
+                }
+            ],
         }
         try:
             resp = requests.post(f"{API_URL}/predict", json=payload, timeout=15)

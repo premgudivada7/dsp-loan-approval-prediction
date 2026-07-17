@@ -10,6 +10,7 @@ Pipeline:
 
 Run:  python -m src.preprocessing
 """
+
 from __future__ import annotations
 
 import json
@@ -26,9 +27,15 @@ HEATMAP_PNG = ROOT / "reports" / "correlation_heatmap.png"
 REPORT_JSON = ROOT / "reports" / "preprocessing_report.json"
 
 NUMERIC_COLS = [
-    "no_of_dependents", "income_annum", "loan_amount", "loan_term",
-    "cibil_score", "residential_assets_value", "commercial_assets_value",
-    "luxury_assets_value", "bank_asset_value",
+    "no_of_dependents",
+    "income_annum",
+    "loan_amount",
+    "loan_term",
+    "cibil_score",
+    "residential_assets_value",
+    "commercial_assets_value",
+    "luxury_assets_value",
+    "bank_asset_value",
 ]
 CATEGORICAL_COLS = ["education", "self_employed"]
 TARGET = "loan_status"
@@ -50,6 +57,7 @@ def load_raw(path: Path = RAW_CSV) -> pd.DataFrame:
 def build_heatmap(df: pd.DataFrame, out: Path = HEATMAP_PNG) -> None:
     """Save a correlation heatmap of numeric features + encoded target."""
     import matplotlib
+
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
@@ -65,8 +73,15 @@ def build_heatmap(df: pd.DataFrame, out: Path = HEATMAP_PNG) -> None:
     ax.set_yticklabels(corr.columns, fontsize=8)
     for i in range(len(corr.columns)):
         for j in range(len(corr.columns)):
-            ax.text(j, i, f"{corr.iloc[i, j]:.2f}", ha="center", va="center",
-                    color="black", fontsize=7)
+            ax.text(
+                j,
+                i,
+                f"{corr.iloc[i, j]:.2f}",
+                ha="center",
+                va="center",
+                color="black",
+                fontsize=7,
+            )
     fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
     ax.set_title("Feature correlation heatmap (loan approval)")
     fig.tight_layout()
@@ -91,8 +106,14 @@ def quality_mask(df: pd.DataFrame) -> pd.Series:
     good &= df["cibil_score"].between(300, 900)
     good &= df["no_of_dependents"].between(0, 5)
     good &= df["loan_term"] > 0
-    for col in ["income_annum", "loan_amount", "residential_assets_value",
-                "commercial_assets_value", "luxury_assets_value", "bank_asset_value"]:
+    for col in [
+        "income_annum",
+        "loan_amount",
+        "residential_assets_value",
+        "commercial_assets_value",
+        "luxury_assets_value",
+        "bank_asset_value",
+    ]:
         good &= df[col] >= 0
 
     good &= df["education"].isin(VALID_EDUCATION)

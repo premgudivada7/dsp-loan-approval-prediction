@@ -15,8 +15,8 @@ from airflow.decorators import dag, task
 PROJECT_ROOT = Path(os.getenv("PROJECT_ROOT", "/opt/airflow/project"))
 sys.path.append(str(PROJECT_ROOT))
 
-from src.alerts import send_teams_alert            # noqa: E402
-from src.gx_validation import validate_batch        # noqa: E402
+from src.alerts import send_teams_alert  # noqa: E402
+from src.gx_validation import validate_batch  # noqa: E402
 
 RAW_DATA = PROJECT_ROOT / "data" / "raw_data"
 GOOD_DATA = PROJECT_ROOT / "data" / "good_data"
@@ -26,7 +26,7 @@ POSTGRES_CONN_ID = "loan_postgres"
 
 @dag(
     dag_id="loan_data_ingestion",
-    schedule="*/5 * * * *",           # every 5 minutes
+    schedule="*/5 * * * *",  # every 5 minutes
     start_date=pendulum.datetime(2024, 1, 1, tz="UTC"),
     catchup=False,
     max_active_runs=1,
@@ -63,6 +63,7 @@ def ingestion_dag():
         if not summary:
             return
         from airflow.providers.postgres.hooks.postgres import PostgresHook
+
         hook = PostgresHook(postgres_conn_id=POSTGRES_CONN_ID)
         hook.run(
             """
@@ -72,9 +73,13 @@ def ingestion_dag():
             VALUES (NOW(), %s, %s, %s, %s, %s, %s, %s, %s)
             """,
             parameters=(
-                summary["file_name"], summary["total_rows"], summary["valid_rows"],
-                summary["invalid_rows"], summary["invalid_pct"],
-                summary["criticality"], json.dumps(summary["error_summary"]),
+                summary["file_name"],
+                summary["total_rows"],
+                summary["valid_rows"],
+                summary["invalid_rows"],
+                summary["invalid_pct"],
+                summary["criticality"],
+                json.dumps(summary["error_summary"]),
                 summary["report_name"],
             ),
         )
@@ -97,11 +102,14 @@ def ingestion_dag():
         name = summary["file_name"]
         invalid = set(summary["invalid_indices"])
 
-        if summary["missing_column"] or summary["invalid_rows"] == summary["total_rows"]:
-            df.to_csv(BAD_DATA / name, index=False)            # all bad
+        if (
+            summary["missing_column"]
+            or summary["invalid_rows"] == summary["total_rows"]
+        ):
+            df.to_csv(BAD_DATA / name, index=False)  # all bad
         elif summary["invalid_rows"] == 0:
-            df.to_csv(GOOD_DATA / name, index=False)           # all good
-        else:                                                   # split
+            df.to_csv(GOOD_DATA / name, index=False)  # all good
+        else:  # split
             good = df.loc[~df.index.isin(invalid)]
             bad = df.loc[df.index.isin(invalid)]
             good.to_csv(GOOD_DATA / name, index=False)
@@ -109,7 +117,7 @@ def ingestion_dag():
 
     raw = read_data()
     summary = validate_data(raw)
-# Run the remaining three tasks in parallel after data validation.
+    # Run the remaining three tasks in parallel after data validation.
     save_statistics(summary)
     send_alerts(summary)
     split_and_save_data(summary)
