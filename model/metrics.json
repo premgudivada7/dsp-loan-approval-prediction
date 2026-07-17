@@ -1,0 +1,21 @@
+{
+  "backend": "sklearn",
+  "best_model": "random_forest",
+  "comparison": {
+    "logistic_regression": {
+      "accuracy": 0.9093,
+      "f1": 0.929,
+      "roc_auc": 0.9665
+    },
+    "random_forest": {
+      "accuracy": 0.9929,
+      "f1": 0.9945,
+      "roc_auc": 0.9993
+    },
+    "gradient_boosting": {
+      "accuracy": 0.9882,
+      "f1": 0.9909,
+      "roc_auc": 0.9973
+    }
+  }
+}

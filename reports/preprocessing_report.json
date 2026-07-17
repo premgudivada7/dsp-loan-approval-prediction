@@ -1,0 +1,23 @@
+{
+  "total_rows": 4269,
+  "good_rows": 4241,
+  "bad_rows": 28,
+  "target_distribution": {
+    "Approved": 2640,
+    "Rejected": 1601
+  },
+  "target_correlation": {
+    "no_of_dependents": -0.018,
+    "income_annum": -0.015,
+    "loan_amount": 0.016,
+    "loan_term": -0.113,
+    "cibil_score": 0.771,
+    "residential_assets_value": -0.014,
+    "commercial_assets_value": 0.008,
+    "luxury_assets_value": -0.015,
+    "bank_asset_value": -0.007
+  },
+  "clean_csv": "data/clean_loan_data.csv",
+  "rejected_csv": "reports/rejected_rows.csv",
+  "heatmap": "reports/correlation_heatmap.png"
+}

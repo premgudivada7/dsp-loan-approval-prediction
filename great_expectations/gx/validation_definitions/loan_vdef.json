@@ -1,0 +1,22 @@
+{
+  "data": {
+    "asset": {
+      "id": "5d3fc301-10ba-4fc0-86d0-d6b791111cc5",
+      "name": "ingested_batch"
+    },
+    "batch_definition": {
+      "id": "ae561001-6f8a-4bf7-bec1-657f9df6aa75",
+      "name": "whole_batch"
+    },
+    "datasource": {
+      "id": "db4d8677-e761-45b4-8a18-ea80a3fc54ea",
+      "name": "loan_pandas"
+    }
+  },
+  "id": "46137c77-c948-4b6b-bebe-3ffdeb78ceb8",
+  "name": "loan_vdef",
+  "suite": {
+    "id": "24030bbe-bd35-4431-af88-cf4efede4710",
+    "name": "loan_ingestion_suite"
+  }
+}

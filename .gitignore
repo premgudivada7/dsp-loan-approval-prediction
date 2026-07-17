@@ -1,0 +1,24 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+*.db
+loan_mlops.db
+
+# Data artifacts (keep folders, ignore contents)
+data/raw_data/*.csv
+data/good_data/*.csv
+data/bad_data/*.csv
+reports/*.png
+reports/*.csv
+
+# Great Expectations generated artifacts
+great_expectations/uncommitted/
+
+# Model binary (regenerate via `python -m src.train`)
+model/*.pkl
+
+.pytest_cache/
+.DS_Store

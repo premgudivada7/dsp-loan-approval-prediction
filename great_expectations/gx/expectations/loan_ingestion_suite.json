@@ -1,0 +1,312 @@
+{
+  "expectations": [
+    {
+      "id": "00622338-15a6-4b93-b1fb-1d20ad979c64",
+      "kwargs": {
+        "column": "loan_id"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "865127ec-2bf7-4280-b6c7-474a10e12c89",
+      "kwargs": {
+        "column": "no_of_dependents"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "14e22789-5888-4b2a-8471-3b8e696c7b1f",
+      "kwargs": {
+        "column": "education"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "0f92e6fa-5ee7-4cd5-ac67-a1d622293b94",
+      "kwargs": {
+        "column": "self_employed"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "ef64dbd4-cf9a-4163-922f-90883ba1dbec",
+      "kwargs": {
+        "column": "income_annum"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "2159652b-0ff3-49f5-998b-789259665ff4",
+      "kwargs": {
+        "column": "loan_amount"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "48f8ac07-9355-4307-97df-0c26d2bb5a89",
+      "kwargs": {
+        "column": "loan_term"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "d2bd715f-c620-411c-9e4b-afbb4bff4862",
+      "kwargs": {
+        "column": "cibil_score"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "66e85164-d448-4748-82d4-113b5fd0450d",
+      "kwargs": {
+        "column": "residential_assets_value"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "33594902-728c-45a4-8969-39d31d43cd05",
+      "kwargs": {
+        "column": "commercial_assets_value"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "d48a66e4-ee95-4fed-9547-85d8dac94f6f",
+      "kwargs": {
+        "column": "luxury_assets_value"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "5e443f18-cdd2-443d-b7e8-63ec97e9007a",
+      "kwargs": {
+        "column": "bank_asset_value"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_to_exist"
+    },
+    {
+      "id": "c6b55d5c-32a5-4fe0-b79d-eea2eb336b0b",
+      "kwargs": {
+        "column": "loan_id"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "a9dab073-eb24-4277-8d7f-039b01e3c809",
+      "kwargs": {
+        "column": "cibil_score"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "84f714ed-cc14-45e3-8e15-9dbdaa54b58a",
+      "kwargs": {
+        "column": "education"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "c7c97e2b-b468-4df5-ade9-6f96d724078a",
+      "kwargs": {
+        "column": "self_employed"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "0e285573-8094-4fb4-ab87-9198ce7d13ac",
+      "kwargs": {
+        "column": "income_annum"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_not_be_null"
+    },
+    {
+      "id": "77b68601-29a1-4fc0-9bc3-0bf372750993",
+      "kwargs": {
+        "column": "cibil_score",
+        "max_value": 900.0,
+        "min_value": 300.0
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_between"
+    },
+    {
+      "id": "f75b4e94-deb3-4e2f-9db9-6a4e25679700",
+      "kwargs": {
+        "column": "no_of_dependents",
+        "max_value": 15.0,
+        "min_value": 0.0
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_between"
+    },
+    {
+      "id": "1e49f83e-7487-4151-9a13-909298a0f8ec",
+      "kwargs": {
+        "column": "loan_term",
+        "max_value": 40.0,
+        "min_value": 1.0
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_between"
+    },
+    {
+      "id": "42d809b6-a3d0-4b34-ac0c-4bdd28a96b29",
+      "kwargs": {
+        "column": "income_annum",
+        "max_value": 1000000000.0,
+        "min_value": 0.0
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_between"
+    },
+    {
+      "id": "f17411a3-5552-49b8-9850-f66c6da65c0b",
+      "kwargs": {
+        "column": "loan_amount",
+        "max_value": 1000000000.0,
+        "min_value": 0.0
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_between"
+    },
+    {
+      "id": "dabea106-7fb7-4542-95d3-f0da7324eead",
+      "kwargs": {
+        "column": "residential_assets_value",
+        "max_value": 1000000000.0,
+        "min_value": 0.0
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_between"
+    },
+    {
+      "id": "24f6f2b2-dfb5-4448-8975-b6d518dd8baa",
+      "kwargs": {
+        "column": "commercial_assets_value",
+        "max_value": 1000000000.0,
+        "min_value": 0.0
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_between"
+    },
+    {
+      "id": "83e62b51-ebb1-4c7d-b70f-aefc3e0c336e",
+      "kwargs": {
+        "column": "luxury_assets_value",
+        "max_value": 1000000000.0,
+        "min_value": 0.0
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_between"
+    },
+    {
+      "id": "6285edc6-dc5e-46c4-a5d1-ab6d35dea916",
+      "kwargs": {
+        "column": "bank_asset_value",
+        "max_value": 1000000000.0,
+        "min_value": 0.0
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_between"
+    },
+    {
+      "id": "57277c89-0c7d-460d-b1ab-192502123c71",
+      "kwargs": {
+        "column": "education",
+        "value_set": [
+          "Graduate",
+          "Not Graduate"
+        ]
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_in_set"
+    },
+    {
+      "id": "0415f238-6425-45d8-9386-37078fb2f05f",
+      "kwargs": {
+        "column": "self_employed",
+        "value_set": [
+          "Yes",
+          "No"
+        ]
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_in_set"
+    },
+    {
+      "id": "d855f853-12fd-4a63-a13e-da8ce895fdea",
+      "kwargs": {
+        "column": "loan_id"
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_unique"
+    },
+    {
+      "id": "9b607517-15dc-48ee-81ba-cb4178b15795",
+      "kwargs": {
+        "column": "cibil_score",
+        "type_list": [
+          "INTEGER",
+          "int64",
+          "int",
+          "float64"
+        ]
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_in_type_list"
+    }
+  ],
+  "id": "adda24c1-e87a-4a55-8ee5-c17104353bb1",
+  "meta": {
+    "great_expectations_version": "1.19.0"
+  },
+  "name": "loan_ingestion_suite",
+  "notes": null
+}
