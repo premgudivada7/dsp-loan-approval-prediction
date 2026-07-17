@@ -8,6 +8,7 @@ numpy logistic regression so a usable artifact is always produced.
 
 Run:  python -m src.train
 """
+
 from __future__ import annotations
 
 import json
@@ -18,8 +19,13 @@ import numpy as np
 import pandas as pd
 
 from src.features import (
-    LABELS, TARGET, FEATURE_ORDER, NumpyLogReg,
-    apply_scaler, engineer, fit_scaler,
+    LABELS,
+    TARGET,
+    FEATURE_ORDER,
+    NumpyLogReg,
+    apply_scaler,
+    engineer,
+    fit_scaler,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -42,8 +48,11 @@ def _metrics(y_true: np.ndarray, proba: np.ndarray) -> dict:
     ranks = np.empty_like(order, dtype=float)
     ranks[order] = np.arange(1, len(proba) + 1)
     n_pos, n_neg = int(y_true.sum()), int((1 - y_true).sum())
-    auc = ((ranks[y_true == 1].sum() - n_pos * (n_pos + 1) / 2) / (n_pos * n_neg)
-           if n_pos and n_neg else 0.5)
+    auc = (
+        (ranks[y_true == 1].sum() - n_pos * (n_pos + 1) / 2) / (n_pos * n_neg)
+        if n_pos and n_neg
+        else 0.5
+    )
     return {"accuracy": round(acc, 4), "f1": round(f1, 4), "roc_auc": round(auc, 4)}
 
 
@@ -66,13 +75,14 @@ def run() -> dict:
 
     candidates: dict = {}
     try:
-        from sklearn.ensemble import (GradientBoostingClassifier,
-                                       RandomForestClassifier)
+        from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
         from sklearn.linear_model import LogisticRegression
+
         candidates = {
             "logistic_regression": LogisticRegression(max_iter=1000),
             "random_forest": RandomForestClassifier(
-                n_estimators=300, random_state=42, n_jobs=-1),
+                n_estimators=300, random_state=42, n_jobs=-1
+            ),
             "gradient_boosting": GradientBoostingClassifier(random_state=42),
         }
         backend = "sklearn"

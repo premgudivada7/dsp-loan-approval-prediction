@@ -5,15 +5,22 @@ Kept deliberately dependency-light (numpy + pandas only) so that training,
 the API and the batch-prediction DAG all encode inputs identically. sklearn is
 optional; when it is unavailable a numpy logistic-regression backend is used.
 """
+
 from __future__ import annotations
 
 import numpy as np
 import pandas as pd
 
 NUMERIC_COLS = [
-    "no_of_dependents", "income_annum", "loan_amount", "loan_term",
-    "cibil_score", "residential_assets_value", "commercial_assets_value",
-    "luxury_assets_value", "bank_asset_value",
+    "no_of_dependents",
+    "income_annum",
+    "loan_amount",
+    "loan_term",
+    "cibil_score",
+    "residential_assets_value",
+    "commercial_assets_value",
+    "luxury_assets_value",
+    "bank_asset_value",
 ]
 # One-hot (drop-first) encodings for the two binary categoricals.
 DERIVED_COLS = ["is_graduate", "is_self_employed"]
@@ -28,8 +35,12 @@ def engineer(df: pd.DataFrame) -> np.ndarray:
     out = pd.DataFrame(index=df.index)
     for col in NUMERIC_COLS:
         out[col] = pd.to_numeric(df[col], errors="coerce")
-    out["is_graduate"] = (df["education"].astype(str).str.strip() == "Graduate").astype(float)
-    out["is_self_employed"] = (df["self_employed"].astype(str).str.strip() == "Yes").astype(float)
+    out["is_graduate"] = (df["education"].astype(str).str.strip() == "Graduate").astype(
+        float
+    )
+    out["is_self_employed"] = (
+        df["self_employed"].astype(str).str.strip() == "Yes"
+    ).astype(float)
     return out[FEATURE_ORDER].to_numpy(dtype=float)
 
 

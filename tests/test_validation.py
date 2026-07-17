@@ -1,4 +1,5 @@
 """Tests for the validation summary contract (uses the pandas fallback path)."""
+
 from __future__ import annotations
 
 import pandas as pd
@@ -6,10 +7,17 @@ import pandas as pd
 from src.gx_validation import _pandas_validate
 
 GOOD_ROW = {
-    "loan_id": 1, "no_of_dependents": 2, "education": "Graduate",
-    "self_employed": "No", "income_annum": 9600000, "loan_amount": 29900000,
-    "loan_term": 12, "cibil_score": 778, "residential_assets_value": 2400000,
-    "commercial_assets_value": 17600000, "luxury_assets_value": 22700000,
+    "loan_id": 1,
+    "no_of_dependents": 2,
+    "education": "Graduate",
+    "self_employed": "No",
+    "income_annum": 9600000,
+    "loan_amount": 29900000,
+    "loan_term": 12,
+    "cibil_score": 778,
+    "residential_assets_value": 2400000,
+    "commercial_assets_value": 17600000,
+    "luxury_assets_value": 22700000,
     "bank_asset_value": 8000000,
 }
 
